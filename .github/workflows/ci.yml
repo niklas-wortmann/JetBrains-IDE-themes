@@ -23,8 +23,8 @@ jobs:
           version: 8
           run_install: |
             - recursive: true
-            args: [--frozen-lockfile, --strict-peer-dependencies]
-            - args: [--global, eslint, typescript]
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+            - args: [--global, gulp, prettier, typescript]
 
       - name: Set node
         uses: actions/setup-node@v4
@@ -47,7 +47,7 @@ jobs:
           version: 8
           run_install: |
             - recursive: true
-            args: [--frozen-lockfile, --strict-peer-dependencies]
+              args: [--frozen-lockfile, --strict-peer-dependencies]
             - args: [--global, eslint, typescript]
 
       - name: Set node
