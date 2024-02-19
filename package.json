@@ -1,0 +1,64 @@
+{
+    "name": "jetbrains-ide-themes",
+    "type": "module",
+    "version": "0.0.1",
+    "description": "Shiki Theme for JetBrains IDEs",
+    "author": "Jan-Niklas Wortmann <jwortmann719@gmail.com>",
+    "license": "MIT",
+    "homepage": "https://github.com/niklas-wortmann/JetBrains-IDE-themes",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/niklas-wortmann/JetBrains-IDE-themes.git"
+    },
+    "bugs": "https://github.com/niklas-wortmann/JetBrains-IDE-themes/issues",
+    "keywords": [
+        "shiki",
+        "jetbrains",
+        "theme",
+        "dark"
+    ],
+    "sideEffects": false,
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.mts",
+            "default": "./dist/index.mjs"
+        },
+        "./dist/*": "./dist/*",
+        "./*": "./dist/*"
+    },
+    "packageManager": "pnpm@8.15.3",
+    "main": "./dist/index.mjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.mts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "rimraf dist && NODE_OPTIONS=--max-old-space-size=4096 rollup -c",
+        "typecheck": "tsc --noEmit",
+        "dev": "rollup -cw",
+        "prepublishOnly": "pnpm run build",
+        "release": "bumpp && pnpm -r publish",
+        "lint": "eslint src"
+    },
+    "dependencies": {
+        "@shikijs/core": "1.1.5"
+    },
+    "devDependencies": {
+        "@types/node": "20.11.19",
+        "@rollup/plugin-commonjs": "25.0.7",
+        "@rollup/plugin-json": "6.1.0",
+        "@rollup/plugin-node-resolve": "15.2.3",
+        "bumpp": "9.3.0",
+        "esbuild": "0.20.1",
+        "eslint": "8.56.0",
+        "pnpm": "8.15.3",
+        "prettier": "3.2.5",
+        "rollup": "^4.11.0",
+        "rollup-plugin-dts": "^6.1.0",
+        "rollup-plugin-esbuild": "^6.1.1",
+        "rollup-plugin-typescript2": "^0.36.0",
+        "typescript": "5.3.3",
+        "@typescript-eslint/eslint-plugin": "7.0.2"
+    }
+}
