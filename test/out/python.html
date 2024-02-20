@@ -1,0 +1,100 @@
+<pre class="shiki Jetbrains Dark Theme" style="background-color:#2b2b2b;color:#a9b7c6" tabindex="0"><code><span class="line"></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> os</span></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> re</span></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> jwt</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">def</span><span style="color:#56A8F5"> auth_token_decode</span><span style="color:#A9B7C6">(auth_token):</span></span>
+<span class="line"><span style="color:#6A8759">    """</span></span>
+<span class="line"><span style="color:#6A8759">    Checks whether JWT Token is valid or not.</span></span>
+<span class="line"><span style="color:#6A8759">    If valid returns True else False</span></span>
+<span class="line"><span style="color:#6A8759">    """</span></span>
+<span class="line"><span style="color:#CC7832">    try</span><span style="color:#A9B7C6">:</span></span>
+<span class="line"><span style="color:#A9B7C6">        jwt.decode(auth_token, os.environ[</span><span style="color:#6A8759">'SECRET_KEY'</span><span style="color:#A9B7C6">], algorithms=[</span><span style="color:#6A8759">"HS256"</span><span style="color:#A9B7C6">])</span></span>
+<span class="line"><span style="color:#CC7832">        return</span><span style="color:#CC7832"> True</span></span>
+<span class="line"><span style="color:#CC7832">    except</span><span style="color:#A9B7C6"> jwt.ExpiredSignatureError:</span></span>
+<span class="line"><span style="color:#CC7832">        return</span><span style="color:#CC7832"> False</span></span>
+<span class="line"><span style="color:#CC7832">    except</span><span style="color:#A9B7C6"> jwt.InvalidSignatureError:</span></span>
+<span class="line"><span style="color:#CC7832">        return</span><span style="color:#CC7832"> False</span></span>
+<span class="line"><span style="color:#CC7832">    except</span><span style="color:#A9B7C6"> jwt.InvalidTokenError:</span></span>
+<span class="line"><span style="color:#CC7832">        return</span><span style="color:#CC7832"> False</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">def</span><span style="color:#56A8F5"> lambda_handler</span><span style="color:#A9B7C6">(event, context):</span></span>
+<span class="line"><span style="color:#A9B7C6">    token = event[</span><span style="color:#6A8759">'authorizationToken'</span><span style="color:#A9B7C6">]  </span><span style="color:#808080"># retrieve the Auth token</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#A9B7C6">    principal_id = </span><span style="color:#6A8759">'abc123'</span><span style="color:#808080">  # fake</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#A9B7C6">    policy = create_policy(event[</span><span style="color:#6A8759">'methodArn'</span><span style="color:#A9B7C6">], principal_id)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">    if</span><span style="color:#A9B7C6"> event[</span><span style="color:#6A8759">'authorizationToken'</span><span style="color:#A9B7C6">]:</span></span>
+<span class="line"><span style="color:#A9B7C6">        user_info = auth_token_decode(token)</span></span>
+<span class="line"><span style="color:#CC7832">        if</span><span style="color:#A9B7C6"> user_info:</span></span>
+<span class="line"><span style="color:#A9B7C6">            policy.allowAllMethods()</span></span>
+<span class="line"><span style="color:#CC7832">        else</span><span style="color:#A9B7C6">:</span></span>
+<span class="line"><span style="color:#A9B7C6">            policy.denyAllMethods()</span></span>
+<span class="line"><span style="color:#CC7832">    else</span><span style="color:#A9B7C6">:</span></span>
+<span class="line"><span style="color:#A9B7C6">        policy.denyAllMethods()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">    return</span><span style="color:#A9B7C6"> policy.build()</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">def</span><span style="color:#56A8F5"> create_policy</span><span style="color:#A9B7C6">(method_arn, principal_id):</span></span>
+<span class="line"><span style="color:#A9B7C6">    tmp = method_arn.split(</span><span style="color:#6A8759">':'</span><span style="color:#A9B7C6">)</span></span>
+<span class="line"><span style="color:#A9B7C6">    region = tmp[</span><span style="color:#6897BB">3</span><span style="color:#A9B7C6">]</span></span>
+<span class="line"><span style="color:#A9B7C6">    account_id = tmp[</span><span style="color:#6897BB">4</span><span style="color:#A9B7C6">]</span></span>
+<span class="line"><span style="color:#A9B7C6">    api_id, stage = tmp[</span><span style="color:#6897BB">5</span><span style="color:#A9B7C6">].split(</span><span style="color:#6A8759">'/'</span><span style="color:#A9B7C6">)[:</span><span style="color:#6897BB">2</span><span style="color:#A9B7C6">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#A9B7C6">    policy = AuthPolicy(principal_id, account_id)</span></span>
+<span class="line"><span style="color:#A9B7C6">    policy.restApiId = api_id</span></span>
+<span class="line"><span style="color:#A9B7C6">    policy.region = region</span></span>
+<span class="line"><span style="color:#A9B7C6">    policy.stage = stage</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">    return</span><span style="color:#A9B7C6"> policy</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">class</span><span style="color:#A9B7C6"> HttpVerb:</span></span>
+<span class="line"><span style="color:#A9B7C6">    GET = </span><span style="color:#6A8759">'GET'</span></span>
+<span class="line"><span style="color:#A9B7C6">    POST = </span><span style="color:#6A8759">'POST'</span></span>
+<span class="line"><span style="color:#A9B7C6">    PUT = </span><span style="color:#6A8759">'PUT'</span></span>
+<span class="line"><span style="color:#A9B7C6">    PATCH = </span><span style="color:#6A8759">'PATCH'</span></span>
+<span class="line"><span style="color:#A9B7C6">    HEAD = </span><span style="color:#6A8759">'HEAD'</span></span>
+<span class="line"><span style="color:#A9B7C6">    DELETE = </span><span style="color:#6A8759">'DELETE'</span></span>
+<span class="line"><span style="color:#A9B7C6">    OPTIONS = </span><span style="color:#6A8759">'OPTIONS'</span></span>
+<span class="line"><span style="color:#A9B7C6">    ALL = </span><span style="color:#6A8759">'*'</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">class</span><span style="color:#A9B7C6"> AuthPolicy(</span><span style="color:#A5C261">object</span><span style="color:#A9B7C6">):</span></span>
+<span class="line"><span style="color:#808080">    # The AWS account id the policy will be generated for. This is used to create the method ARNs.</span></span>
+<span class="line"><span style="color:#A9B7C6">    awsAccountId = </span><span style="color:#6A8759">''</span></span>
+<span class="line"><span style="color:#808080">    # The principal used for the policy, this should be a unique identifier for the end user.</span></span>
+<span class="line"><span style="color:#A9B7C6">    principalId = </span><span style="color:#6A8759">''</span></span>
+<span class="line"><span style="color:#808080">    # The policy version used for the evaluation. This should always be '2012-10-17'</span></span>
+<span class="line"><span style="color:#A9B7C6">    version = </span><span style="color:#6A8759">'2012-10-17'</span></span>
+<span class="line"><span style="color:#808080">    # The regular expression used to validate resource paths for the policy</span></span>
+<span class="line"><span style="color:#A9B7C6">    pathRegex = </span><span style="color:#6A8759">'^[/.a-zA-Z0-9-\*]+$'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A8759">    '''Internal lists of allowed and denied methods.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A8759">    These are lists of objects and each object has 2 properties: A resource</span></span>
+<span class="line"><span style="color:#6A8759">    ARN and a nullable conditions statement. The build method processes these</span></span>
+<span class="line"><span style="color:#6A8759">    lists and generates the approriate statements for the final policy.</span></span>
+<span class="line"><span style="color:#6A8759">    '''</span></span>
+<span class="line"><span style="color:#A9B7C6">    allowMethods = []</span></span>
+<span class="line"><span style="color:#A9B7C6">    denyMethods = []</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#808080">    # The API Gateway API id. By default this is set to '*'</span></span>
+<span class="line"><span style="color:#A9B7C6">    restApiId = </span><span style="color:#6A8759">'*'</span></span>
+<span class="line"><span style="color:#808080">    # The region where the API is deployed. By default this is set to '*'</span></span>
+<span class="line"><span style="color:#A9B7C6">    region = </span><span style="color:#6A8759">'*'</span></span>
+<span class="line"><span style="color:#808080">    # The name of the stage used in the policy. By default this is set to '*'</span></span>
+<span class="line"><span style="color:#A9B7C6">    stage = </span><span style="color:#6A8759">'*'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#CC7832">    def</span><span style="color:#B200B2"> __init__</span><span style="color:#A9B7C6">(</span><span style="color:#94558D">self</span><span style="color:#A9B7C6">, principal, awsAccountId):</span></span>
+<span class="line"><span style="color:#94558D">        self</span><span style="color:#A9B7C6">.awsAccountId = awsAccountId</span></span>
+<span class="line"><span style="color:#94558D">        self</span><span style="color:#A9B7C6">.principalId = principal</span></span>
+<span class="line"><span style="color:#94558D">        self</span><span style="color:#A9B7C6">.allowMethods = []</span></span>
+<span class="line"><span style="color:#94558D">        self</span><span style="color:#A9B7C6">.denyMethods = []</span></span>
+<span class="line"><span style="color:#A9B7C6">        </span></span>
+<span class="line"></span></code></pre>
