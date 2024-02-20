@@ -1,7 +1,7 @@
 {
     "name": "jetbrains-ide-themes",
     "type": "module",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Shiki Theme for JetBrains IDEs",
     "author": "Jan-Niklas Wortmann <jwortmann719@gmail.com>",
     "license": "MIT",
