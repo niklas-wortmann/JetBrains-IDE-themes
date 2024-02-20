@@ -4,9 +4,6 @@ export const Dark: ThemeRegistrationAny = {
     name: 'Jetbrains Dark Theme',
     $schema: 'vscode://schemas/color-theme',
     type: 'dark',
-    settings: [],
-    fg: '',
-    bg: '',
     colors: {
         'activityBarBadge.background': '#007acc',
         'editor.background': '#2b2b2b',
@@ -542,6 +539,31 @@ export const Dark: ThemeRegistrationAny = {
             scope: ['constant.language.import-export-all'],
             settings: {
                 foreground: '#A9B7C6',
+                fontStyle: '',
+            },
+        },
+        {
+            scope: [
+                'variable.language.special.self.python',
+                'support.variable.magic.python',
+                'variable.parameter.function.language.special.self.python',
+            ],
+            settings: {
+                foreground: '#94558D',
+                fontStyle: '',
+            },
+        },
+        {
+            scope: ['support.function.magic.python'],
+            settings: {
+                foreground: '#B200B2',
+                fontStyle: '',
+            },
+        },
+        {
+            scope: ['entity.name.function.python'],
+            settings: {
+                foreground: '#56a8f5',
                 fontStyle: '',
             },
         },

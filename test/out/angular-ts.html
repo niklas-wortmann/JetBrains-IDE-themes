@@ -1,0 +1,31 @@
+<pre class="shiki Jetbrains Dark Theme" style="background-color:#2b2b2b;color:#a9b7c6" tabindex="0"><code><span class="line"></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> { Component</span><span style="color:#CC7832">,</span><span style="color:#A9B7C6"> inject } </span><span style="color:#CC7832">from</span><span style="color:#6A8759"> '@angular/core'</span><span style="color:#CC7832">;</span></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> { RouterLink } </span><span style="color:#CC7832">from</span><span style="color:#6A8759"> '@angular/router'</span><span style="color:#CC7832">;</span></span>
+<span class="line"><span style="color:#CC7832">import</span><span style="color:#A9B7C6"> { CartService } </span><span style="color:#CC7832">from</span><span style="color:#6A8759"> './cart.service'</span><span style="color:#CC7832">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBB529">@Component</span><span style="color:#A9B7C6">({</span></span>
+<span class="line"><span style="color:#9876AA">  selector</span><span style="color:#A9B7C6">: </span><span style="color:#6A8759">'app-cart-button'</span><span style="color:#CC7832">,</span></span>
+<span class="line"><span style="color:#9876AA">  standalone</span><span style="color:#A9B7C6">: </span><span style="color:#CC7832">true,</span></span>
+<span class="line"><span style="color:#9876AA">  imports</span><span style="color:#A9B7C6">: [RouterLink]</span><span style="color:#CC7832">,</span></span>
+<span class="line"><span style="color:#9876AA">  template</span><span style="color:#A9B7C6">: </span><span style="color:#6A8759">`</span></span>
+<span class="line"><span style="color:#E8BF6A">    &#x3C;button</span></span>
+<span class="line"><span style="color:#BABABA">      type</span><span style="color:#A5C261">=</span><span style="color:#A5C261">"button"</span></span>
+<span class="line"><span style="color:#BABABA">      class</span><span style="color:#A5C261">=</span><span style="color:#A5C261">"relative bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700"</span></span>
+<span class="line"><span style="color:#BABABA">      [routerLink]</span><span style="color:#A5C261">=</span><span style="color:#A5C261">"'/cart'"</span></span>
+<span class="line"><span style="color:#E8BF6A">    ></span></span>
+<span class="line"><span style="color:#CC7832">      @if </span><span style="color:#A9B7C6">(cartService.</span><span style="color:#9876AA">length</span><span style="color:#A9B7C6"> > </span><span style="color:#6897BB">0</span><span style="color:#A9B7C6">) {</span></span>
+<span class="line"><span style="color:#E8BF6A">        &#x3C;div</span></span>
+<span class="line"><span style="color:#BABABA">          class</span><span style="color:#A5C261">=</span><span style="color:#A5C261">"absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500  border-white rounded-full -top-2 -end-2 dark:border-gray-900"</span></span>
+<span class="line"><span style="color:#E8BF6A">        ></span></span>
+<span class="line"><span style="color:#A9B7C6">          {{ cartService.</span><span style="color:#9876AA">length</span><span style="color:#A9B7C6"> }}</span></span>
+<span class="line"><span style="color:#E8BF6A">        &#x3C;/div></span></span>
+<span class="line"><span style="color:#A9B7C6">      }</span></span>
+<span class="line"><span style="color:#A9B7C6">      Cart</span></span>
+<span class="line"><span style="color:#E8BF6A">    &#x3C;/button></span></span>
+<span class="line"><span style="color:#6A8759">  `</span><span style="color:#CC7832">,</span></span>
+<span class="line"><span style="color:#9876AA">  styles</span><span style="color:#A9B7C6">: </span><span style="color:#6A8759">''</span><span style="color:#CC7832">,</span></span>
+<span class="line"><span style="color:#A9B7C6">})</span></span>
+<span class="line"><span style="color:#CC7832">export</span><span style="color:#CC7832"> class</span><span style="color:#A9B7C6"> CartButtonComponent {</span></span>
+<span class="line"><span style="color:#CC7832">  protected</span><span style="color:#9876AA"> cartService</span><span style="color:#A9B7C6"> = </span><span style="color:#E8BF6A">inject</span><span style="color:#A9B7C6">(CartService)</span><span style="color:#CC7832">;</span></span>
+<span class="line"><span style="color:#A9B7C6">}</span></span>
+<span class="line"></span></code></pre>
